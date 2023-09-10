@@ -88,9 +88,12 @@ function getOppositeOrientation(orientation) {
   else if (orientation === 'E') return 'W';
 }
 
-function backTrackRobot() {
-  API.turnRight();
-  API.turnRight();
+function backTrackRobot(orientation, previousOrientation) {
+  if (API.wallFront()) {
+    log('Ohhhh i see a wall at front side');
+    API.turnRight();
+    API.turnRight();
+  }
   API.moveForward();
 }
 
@@ -98,12 +101,16 @@ function exploreMaze2(row, col) {
   const visitedMap = new Map();
   const stack = [];
   let orientation = 'N';
+  let previousOrientation = null;
   stack.push([row, col]);
   while (stack.length) {
     const [currRow, currCol] = stack.at(0);
     console.error('Current stack is: ', stack);
     const key = getKey(currRow, currCol);
     API.setText(currRow, currCol, `${currRow},${currCol}`);
+    if (visitedMap.has(key)) {
+      log('Inside main loop already visited here ');
+    }
     visitedMap.set(key, true);
     const neighboursList = findValidNeighbours(currRow, currCol, orientation);
     let isAnyNeighbourFound = false;
@@ -112,11 +119,17 @@ function exploreMaze2(row, col) {
       if (!visitedMap.has(neighbourKey)) {
         stack.unshift([neighbour[0], neighbour[1], neighbour[2]]);
         moveRobot(neighbour[3]);
+        previousOrientation = orientation;
         orientation = neighbour[2];
         isAnyNeighbourFound = true;
         break;
       } else {
         console.error('Already visited this neighbour: ', neighbourKey);
+        // API.turnRight();
+        // API.turnRight();
+        // API.moveForward();
+        // previousOrientation = orientation;
+        // orientation = getOppositeOrientation(orientation);
       }
     }
 
@@ -130,8 +143,9 @@ function exploreMaze2(row, col) {
       if (stack.length) {
         const [tr, tc] = stack.at(0);
         console.error('Need to reach at: ', `${tr}-${tc}`);
-        backTrackRobot();
+        previousOrientation = orientation;
         orientation = getOppositeOrientation(orientation);
+        backTrackRobot(orientation, previousOrientation);
       }
     }
   }
