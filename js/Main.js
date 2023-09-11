@@ -53,14 +53,14 @@ function main() {
   API.setText(0, 0, 'abc');
   while (true) {
     log(`Direction: x = ${x} y = ${y}`);
-    API.setColor(x, y, 'G');
-    decideAction();
-    // if (!API.wallRight()) {
-    //   API.turnRight();
-    // }
-    // while (API.wallFront()) {
-    //   API.turnLeft();
-    // }
+    // API.setColor(x, y, 'G');
+    // decideAction();
+    if (!API.wallRight()) {
+      API.turnRight();
+    }
+    while (API.wallFront()) {
+      API.turnLeft();
+    }
     API.moveForward();
     if (direction === 'N') {
       y += 1;
