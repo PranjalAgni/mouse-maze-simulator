@@ -24,7 +24,7 @@ function rotateRobot(row, col, orientation) {
 }
 
 /**
- *
+ * Finds the valid neighbour for the given cell
  * @param {number} row
  * @param {number} col
  * @param {string} orientation
