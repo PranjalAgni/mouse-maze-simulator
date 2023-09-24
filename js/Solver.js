@@ -196,7 +196,7 @@ function exploreMaze(row, col) {
 }
 
 function main() {
-  log('Running...');
+  log('Running the main loop...');
   API.setColor(0, 0, 'G');
 
   let row = 0;
